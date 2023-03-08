@@ -45,7 +45,7 @@ const
   Buffer = require('buffer').Buffer,
   classesString = fs.readFileSync(path.resolve(__dirname, 'gutenberg-classes.txt'), 'utf8') ?? '',
   classesBuffer = Buffer.from(classesString, 'base64') ?? false,
-  classes = classesBuffer ? classesBuffer.toString().split(' ') : ''
+  classes = classesBuffer ? classesBuffer.toString().split(' ') : []
 ```
 
 After `content`:
