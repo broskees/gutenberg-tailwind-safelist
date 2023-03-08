@@ -22,9 +22,9 @@ class TailwindUpdateDbCommand extends Command
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE `{$wpdb->base_prefix}tw_classes` (
-          class_name varchar(191) NOT NULL,
-          post_id bigint(20) UNSIGNED NOT NULL
-          PRIMARY KEY  (public_key)
+            class_id int NOT NULL primary key AUTO_INCREMENT,
+            class_name varchar(191) NOT NULL,
+            post_id bigint(20) UNSIGNED NOT NULL
         ) $charset_collate;";
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');

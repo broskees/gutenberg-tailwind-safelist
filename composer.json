@@ -23,7 +23,7 @@
   "extra": {
     "acorn": {
       "providers": [
-        "Broskees\\GutenbergTwSafelist\\Providers\\GutenbergTwSafelistServiceProvider"
+        "Broskees\\GutenbergTwSafelist\\GutenbergTwSafelistServiceProvider"
       ]
     }
   },
