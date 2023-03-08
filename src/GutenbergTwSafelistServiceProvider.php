@@ -26,7 +26,7 @@ class GutenbergTwSafelistServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../../config/tailwind.php' => $this->app->configPath('tailwind.php'),
+            __DIR__ . '/../config/tailwind.php' => $this->app->configPath('tailwind.php'),
         ], 'config');
 
         $this->commands([

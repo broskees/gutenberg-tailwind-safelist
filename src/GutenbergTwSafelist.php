@@ -34,15 +34,7 @@ class GutenbergTwSafelist
         add_action('post_updated', function ($post_id, $post_after) {
             $classes = $this->getClasses($post_after);
 
-            if (empty($classes)) {
-                return;
-            }
-
-            $classes = $this->filter_classes($classes);
-
-            if (empty($classes)) {
-                return;
-            }
+            $classes = $this->filterClasses($classes);
 
             $updated = $this->updateTwPostMeta($post_id, $classes);
 
@@ -52,8 +44,8 @@ class GutenbergTwSafelist
 
             $classes = $this->updateAndFetchTwDbTable($post_id, $classes);
 
-            $this->buildAssets();
-        }, apply_filter('tw_safelist_action_priority', 10), 2);
+            $this->buildAssets($classes);
+        }, apply_filters('tw_safelist_action_priority', 10), 2);
     }
 
     private function getClasses(\WP_Post $post): array
@@ -90,9 +82,11 @@ class GutenbergTwSafelist
     {
         return array_filter(
             array_map(function ($class) {
-                if (str_starts_with('wp-')) {
+                if (str_starts_with('wp-', $class)) {
                     return false;
                 }
+
+                return $class;
             }, $classes)
         );
     }
@@ -100,7 +94,8 @@ class GutenbergTwSafelist
     private function updateTwPostMeta(int $post_id, array $classes): bool
     {
         $base64_classes_after = base64_encode(implode(' ', $classes));
-        $base64_classes_before = get_post_meta($post_id, 'post_content_classes');
+        $pm_result = get_post_meta($post_id, 'post_content_classes');
+        $base64_classes_before = ($pm_result ? $pm_result[0] : '');
 
         if ($base64_classes_before == $base64_classes_after) {
             return false;
@@ -131,6 +126,12 @@ class GutenbergTwSafelist
         $classes = $wpdb->get_results("
             SELECT DISTINCT class_name FROM {$wpdb->base_prefix}tw_classes
         ");
+
+        if (!empty($classes)) {
+            return array_map(function ($obj) {
+                return $obj->class_name;
+            }, $classes);
+        }
 
         return $classes;
     }
