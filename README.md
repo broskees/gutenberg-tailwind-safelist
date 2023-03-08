@@ -29,7 +29,7 @@ Start by publishing the `config/tailwind.php` configuration file using Acorn.
 $ wp acorn vendor:publish --provider="Broskees\GutenbergTwSafelist\GutenbergTwSafelistServiceProvider"
 ```
 
-Next, create the database:
+Next, create the database table:
 
 ```bash
 $ wp acorn updatetwdb
