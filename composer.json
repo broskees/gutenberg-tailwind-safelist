@@ -1,0 +1,35 @@
+{
+  "name": "broskees/gutenberg-tailwind-safelist",
+  "type": "package",
+  "description": "Creates a safelist in your Tailwind config for all the Tailwind classes used in the Wordpress/Gutenberg editor.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Joseph Roberts",
+      "email": "joe@digitaljoe.co"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Broskees\\GutenbergTwSafelist\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^8.0"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.5"
+  },
+  "extra": {
+    "acorn": {
+      "providers": [
+        "Broskees\\GutenbergTwSafelist\\Providers\\GutenbergTwSafelistServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "lint": [
+      "phpcs --ignore=vendor --extensions=php --standard=PSR12 ."
+    ]
+  }
+}
