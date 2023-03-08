@@ -21,7 +21,7 @@ class GutenbergTwSafelist
     protected $config;
 
     /**
-     * Create a new Poet instance.
+     * Create a new GutenbergTwSafelist instance.
      *
      * @param  Roots\Acorn\Application $app
      * @return void
