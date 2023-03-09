@@ -3,6 +3,7 @@
 namespace Broskees\GutenbergTwSafelist;
 
 use Roots\Acorn\Application;
+use Illuminate\Support\Facades\Cache;
 
 class GutenbergTwSafelist
 {
@@ -21,7 +22,7 @@ class GutenbergTwSafelist
     protected $config;
 
     /**
-     * Create a new GutenbergTwSafelist instance.
+     * Create a new Poet instance.
      *
      * @param  Roots\Acorn\Application $app
      * @return void
@@ -30,9 +31,13 @@ class GutenbergTwSafelist
     {
         $this->app = $app;
         $this->config = $this->app->config->get('tw_version');
+        $AcfComposer = $this->app->make('AcfComposer');
+        $this->composers = !empty($AcfComposer) ? $AcfComposer->getComposers()['App\\'] : [];
 
-        add_action('post_updated', function ($post_id, $post_after) {
-            $classes = $this->getClasses($post_after);
+        add_action('save_post', function ($post_id, $post) {
+            $renderedContent = $this->getRenderedContent($post);
+
+            $classes = $this->getClasses($renderedContent);
 
             $classes = $this->filterClasses($classes);
 
@@ -48,11 +53,57 @@ class GutenbergTwSafelist
         }, apply_filters('tw_safelist_action_priority', 10), 2);
     }
 
-    private function getClasses(\WP_Post $post): array
+    private function getRenderedContent(\WP_Post $post): string
+    {
+        $post_content = $post->post_content;
+        $blocks = parse_blocks($post_content);
+
+        // not a gutenberg page, just return post content
+        if (empty($blocks) || !isset($blocks[0]['blockName'])) {
+            return $post_content;
+        }
+
+        $html = '';
+
+        // get acf rendered block content
+        if (class_exists('ACF')) {
+            array_map_recursive(function ($block) use ($post, &$html) {
+                if (!isset($block['blockName'])) {
+                    return $block;
+                }
+
+                if (str_starts_with($block['blockName'], 'acf/')) {
+                    $attrs = acf_prepare_block($block['attrs']);
+                    $attrs['id'] = acf_ensure_block_id_prefix($post->ID);
+                    acf_setup_meta($attrs['data'], $attrs['id'], true);
+                    ob_start();
+                    if (is_callable($attrs['render_callback'])) {
+                        $attrs['render_callback']($attrs);
+                    } else {
+                        do_action('acf_block_render_template', $attrs, '', false, $post->ID, null, false);
+                    }
+                    $html .= ob_get_clean();
+                    acf_reset_meta($attrs['id']);
+                }
+
+                return $block;
+            }, $blocks);
+        }
+
+        // get rendered normal block content
+        foreach ($blocks as $block) {
+            $html .= render_block($block);
+        }
+
+        return $html;
+    }
+
+
+    private function getClasses(string $renderedContent): array
     {
         preg_match_all(
             '/class="(-?[_a-zA-Z]+[_a-zA-Z0-9-:]* ?)+"/',
-            $post->post_content,
+            $renderedContent,
             $class_strings
         );
 
@@ -105,7 +156,11 @@ class GutenbergTwSafelist
             return true;
         }
 
-        throw new Exception('Update Failed');
+        if (add_post_meta($post_id, 'post_content_classes', $base64_classes_after)) {
+            return true;
+        }
+
+        throw new \Exception('Update Failed');
     }
 
     private function updateAndFetchTwDbTable(int $post_id, array $classes): array

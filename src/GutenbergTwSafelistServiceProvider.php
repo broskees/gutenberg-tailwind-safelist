@@ -33,6 +33,14 @@ class GutenbergTwSafelistServiceProvider extends ServiceProvider
             \Broskees\GutenbergTwSafelist\TailwindUpdateDbCommand::class,
         ]);
 
+        // load helpers
+        $this->loadHelpers();
+
         $this->app->make('Broskees\GutenbergTwSafelist');
+    }
+
+    private function loadHelpers()
+    {
+        require_once dirname(__DIR__) . '/helpers.php';
     }
 }
