@@ -41,6 +41,6 @@ class GutenbergTwSafelistServiceProvider extends ServiceProvider
 
     private function loadHelpers()
     {
-        require_once dirname(__DIR__) . '/helpers.php';
+        require_once dirname(__DIR__) . '/src/helpers.php';
     }
 }
