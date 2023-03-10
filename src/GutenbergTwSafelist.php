@@ -102,7 +102,7 @@ class GutenbergTwSafelist
     private function getClasses(string $renderedContent): array
     {
         preg_match_all(
-            '/class="(-?[_a-zA-Z]+[_a-zA-Z0-9-:]* ?)+"/',
+            'class=(\'|")([a-zA-Z0-9_\[\'\'\]\-:]+? ?)+(\'|")',
             $renderedContent,
             $class_strings
         );
