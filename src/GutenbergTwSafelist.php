@@ -189,6 +189,8 @@ class GutenbergTwSafelist
             }, $classes);
         }
 
+        asort($classes);
+
         return $classes;
     }
 
