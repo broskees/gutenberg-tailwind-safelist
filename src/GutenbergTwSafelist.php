@@ -102,23 +102,24 @@ class GutenbergTwSafelist
     private function getClasses(string $renderedContent): array
     {
         preg_match_all(
-            'class=[\'"]{1}(.+? ?)+[\'"]{1}',
+            '/(class="{1}([^"]+ ?)+?"{1}|class=\'{1}([^\']+ ?)+?\'{1})/',
             $renderedContent,
             $class_strings
         );
 
-        if (empty($class_strings[0])) {
+        $class_strings[2] = array_filter($class_strings[2]);
+        $class_strings[3] = array_filter($class_strings[3]);
+
+        if (empty($class_strings[2])
+            && empty($class_strings[3])
+        ) {
             return [];
         }
 
         $classes = [];
         array_map(function ($string) use (&$classes) {
-            $string = str_replace('class=', '', $string);
-
-            $string = str_replace('"', '', $string);
-
             $classes = array_unique([...$classes, ...explode(' ', $string)]);
-        }, $class_strings[0]);
+        }, [...$class_strings[2], ...$class_strings[3]]);
 
         asort($classes);
 
