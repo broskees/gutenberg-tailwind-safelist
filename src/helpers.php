@@ -46,7 +46,7 @@ function command_exists(string ...$commands): bool
 /**
  * Check if shell_exec is enabled on the current server
  */
-function exec_enabled()
+function exec_enabled(): bool
 {
     return function_exists('shell_exec')
         && is_callable('shell_exec')

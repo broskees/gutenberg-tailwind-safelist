@@ -201,8 +201,8 @@ class GutenbergTwSafelist
 
         // automatic builds (requires npm, nvm, node, & yarn on your server)
         if (file_exists(get_stylesheet_directory() . '/.nvmrc')
-            && command_exists('node', 'npm', 'nvm', 'yarn')
             && exec_enabled()
+            && command_exists('node', 'npm', 'nvm', 'yarn')
         ) {
             \shell_exec('cd ' . get_stylesheet_directory() . ' && nvm use && yarn build 2>&1');
         }
