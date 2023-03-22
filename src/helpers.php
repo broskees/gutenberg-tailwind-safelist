@@ -30,6 +30,10 @@ function array_map_recursive($callback, array $input): array
  */
 function command_exists(string ...$commands): bool
 {
+    if (!exec_enabled()) {
+        return false;
+    }
+
     $commands_exist = true;
     foreach ($commands as $command) {
         if ((null === shell_exec("command -v $command_name")) ? false : true) {
@@ -48,8 +52,13 @@ function command_exists(string ...$commands): bool
  */
 function exec_enabled(): bool
 {
-    return function_exists('shell_exec')
-        && is_callable('shell_exec')
-        && !in_array('shell_exec', array_map('trim', explode(', ', ini_get('disable_functions'))))
-        && strtolower(ini_get('safe_mode')) != 1;
+    static $exec;
+    $exec = isset($exec)
+        ? $exec
+        : (function_exists('shell_exec')
+            && is_callable('shell_exec')
+            && !in_array('shell_exec', array_map('trim', explode(', ', ini_get('disable_functions'))))
+            && strtolower(ini_get('safe_mode')) != 1
+        );
+    return $exec;
 }
