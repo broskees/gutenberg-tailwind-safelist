@@ -22,3 +22,23 @@ function array_map_recursive($callback, array $input): array
 
     return $output;
 }
+
+/**
+ * Checks if a command exist on a typical Linux system
+ * @param string $commands
+ * @return bool
+ */
+function command_exists(string ...$commands): bool
+{
+    $commands_exist = true;
+    foreach ($commands as $command) {
+        if ((null === shell_exec("command -v $command_name")) ? false : true) {
+            continue;
+        }
+
+        $commands_exist = false;
+        break;
+    }
+
+    return $commands_exist;
+}

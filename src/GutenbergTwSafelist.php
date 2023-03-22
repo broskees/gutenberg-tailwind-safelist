@@ -198,6 +198,13 @@ class GutenbergTwSafelist
     {
         $classes_base64 = base64_encode(implode(' ', $classes));
         file_put_contents(get_stylesheet_directory() . '/gutenberg-classes.txt', $classes_base64);
-        shell_exec('cd ' . get_stylesheet_directory() . ' && yarn build:prod');
+
+        // automatic builds (requires npm, nvm, node, & yarn on your server)
+        if (file_exists(get_stylesheet_directory() . '/.nvmrc')
+            && command_exists('node', 'npm', 'nvm', 'yarn')
+            && function_exists('shell_exec')
+        ) {
+            shell_exec('cd ' . get_stylesheet_directory() . ' && nvm use && yarn build 2>&1');
+        }
     }
 }
