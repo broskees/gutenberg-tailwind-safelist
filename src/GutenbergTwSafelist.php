@@ -204,7 +204,7 @@ class GutenbergTwSafelist
             && command_exists('node', 'npm', 'nvm', 'yarn')
             && exec_enabled()
         ) {
-            shell_exec('cd ' . get_stylesheet_directory() . ' && nvm use && yarn build 2>&1');
+            \shell_exec('cd ' . get_stylesheet_directory() . ' && nvm use && yarn build 2>&1');
         }
     }
 }
