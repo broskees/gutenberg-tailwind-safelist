@@ -36,7 +36,7 @@ function command_exists(string ...$commands): bool
 
     $commands_exist = true;
     foreach ($commands as $command) {
-        if ((null === shell_exec("command -v $command_name")) ? false : true) {
+        if ((null === \shell_exec("command -v $command_name")) ? false : true) {
             continue;
         }
 
