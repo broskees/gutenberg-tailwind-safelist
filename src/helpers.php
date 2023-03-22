@@ -42,3 +42,14 @@ function command_exists(string ...$commands): bool
 
     return $commands_exist;
 }
+
+/**
+ * Check if shell_exec is enabled on the current server
+ */
+function exec_enabled()
+{
+    return function_exists('shell_exec')
+        && is_callable('shell_exec')
+        && !in_array('shell_exec', array_map('trim', explode(', ', ini_get('disable_functions'))))
+        && strtolower(ini_get('safe_mode')) != 1;
+}
