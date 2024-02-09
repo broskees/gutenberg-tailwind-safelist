@@ -13,9 +13,7 @@ class TailwindUpdateDbCommand extends Command
      *
      * @var string
      */
-    protected $signature = <<<SIGNATURE
-    acorn updatetwdb
-    SIGNATURE;
+    protected $signature = 'updatetwdb';
 
     /**
      * The console command description.
