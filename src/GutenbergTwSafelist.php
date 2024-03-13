@@ -31,8 +31,6 @@ class GutenbergTwSafelist
     {
         $this->app = $app;
         $this->config = $this->app->config->get('tw_version');
-        $AcfComposer = $this->app->make('AcfComposer');
-        $this->composers = !empty($AcfComposer) && !empty($AcfComposer->getComposers())? $AcfComposer->getComposers()['App\\'] : [];
 
         add_action('save_post', function ($post_id, $post) {
             $renderedContent = $this->getRenderedContent($post);
